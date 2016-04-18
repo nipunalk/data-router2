@@ -1,0 +1,1387 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.leightonobrien.lob2</groupId>
+  <artifactId>data-router2</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+
+<name>Leighton O'Brien Wildfly Service Project Template</name>
+<description>Base Framework Service Project for Leighton O'Brien LOB 2.0</description>
+	<organization>
+		<name>Leighton O'Brien Pty Ltd</name>
+		<url>http://www.leightonobrien.com</url>
+	</organization>
+<url>http://www.leightonobrien.com</url>
+
+	<prerequisites>
+		<maven>3.2.5</maven>
+	</prerequisites>
+	<developers>
+		<developer>
+			<id>itsupport</id>
+			<name>LOB IT</name>
+			<email>itsupport@leightonobrien.com</email>
+		</developer>
+	</developers>
+	<properties>
+        <!-- Explicitly declaring the source encoding eliminates the following 
+            message: -->
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered 
+            resources, i.e. build is platform dependent! -->
+        <version.hibernate>5.1.0.Final</version.hibernate>
+		<version.hibernate-validator>5.2.4.Final</version.hibernate-validator>
+		<version.selenium>2.45.0</version.selenium>
+		<version.graphene>2.1.0.Alpha2</version.graphene>
+		<version.drone>2.0.0.Alpha3</version.drone>
+		<arquillian.browser>firefox</arquillian.browser>
+		<arquillian.chromeDriver>/opt/chromedriver</arquillian.chromeDriver>
+		 
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<failOnMissingWebXml>false</failOnMissingWebXml>
+		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+
+		<version.wildfly>10.0.0.Final</version.wildfly>
+		<version.wildfly-swarm>1.0.0.Beta6</version.wildfly-swarm>
+        <!-- Define the version of the JBoss BOMs we want to import to specify 
+            tested stacks. -->
+        <version.jboss.bom>8.2.1.Final</version.jboss.bom>
+
+		<version.api-rest>1.1-SNAPSHOT</version.api-rest>
+
+
+		<!-- other plugin versions -->
+		<version.compiler.plugin>3.1</version.compiler.plugin>
+		<version.surefire.plugin>2.16</version.surefire.plugin>
+		<version.war.plugin>2.6</version.war.plugin>
+        
+		<!-- Other dependency versions -->
+		<version.org.eclipse.m2e>1.0.0</version.org.eclipse.m2e>
+		<version.ro.isdc.wro4j>1.4.4</version.ro.isdc.wro4j>
+
+        
+		<weld-core-version>2.2.14.Final</weld-core-version>
+		<weld-logger-version>1.0.0-CR2</weld-logger-version>
+
+		<endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+
+		<version.deltaspike>1.4.1</version.deltaspike>
+
+		<servlet-api-version>2.5</servlet-api-version>
+
+		<mongojack-version>2.1.0</mongojack-version>
+		<jackson.version>2.6.3</jackson.version>
+
+		<joda-time-version>2.8</joda-time-version>
+		<junit-version>4.12</junit-version>
+
+		<slf4j-api-version>1.7.12</slf4j-api-version>
+
+		<swagger-jaxrs-2_10-version>1.3.12</swagger-jaxrs-2_10-version>
+		<swagger-annotations-version>1.5.3-M1</swagger-annotations-version>
+
+		<stateless4j-version>2.5.0</stateless4j-version>
+
+		<version.picketlink.javaee.bom>2.6.0.Final</version.picketlink.javaee.bom>
+
+		<restassured.version>2.5.0</restassured.version>
+		<dbunitVersion>2.5.1</dbunitVersion>
+		<keycloak-core.version>1.9.1.Final</keycloak-core.version>
+		<keycloak-adapter-core.version>1.9.1.Final</keycloak-adapter-core.version>
+
+
+		<version.resteasy>3.0.12.Final</version.resteasy>
+
+		<version.primefaces>5.3</version.primefaces>
+		<version.commons-fileupload>1.3</version.commons-fileupload>
+		<version.kie>6.3.0.Final</version.kie>
+
+		<version.jandex>2.0.2.Final</version.jandex>
+		<jxls.version>2.2.8</jxls.version>
+		<jxls-poi.version>1.0.7</jxls-poi.version>
+		<jxls-excel.version>1.0.4</jxls-excel.version>
+		<jxls-reader.version>2.0.1</jxls-reader.version>
+		<apache-poi.version>3.9</apache-poi.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- JBoss distributes a complete set of Java EE 7 APIs including a Bill
+                of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
+                of artifacts. We use this here so that we always get the correct versions 
+                of artifacts. Here we use the jboss-javaee-7.0-with-tools stack (you can
+                read this as the JBoss stack of the Java EE 7 APIs, with some extras tools
+                for your project, such as Arquillian for testing) and the jboss-javaee-7.0-with-hibernate
+                stack you can read this as the JBoss stack of the Java EE 7 APIs, with extras
+                from the Hibernate family of projects) -->
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>jboss-javaee-7.0-with-tools</artifactId>
+                <version>${version.jboss.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>jboss-javaee-7.0-with-hibernate</artifactId>
+                <version>${version.jboss.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>1.1.8.Final</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.arquillian.selenium</groupId>
+				<artifactId>selenium-bom</artifactId>
+				<version>${version.selenium}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.arquillian.extension</groupId>
+				<artifactId>arquillian-drone-bom</artifactId>
+				<version>${version.drone}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+        </dependencies>
+    </dependencyManagement>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>nexus</name>
+			<url>https://nexus/content/repositories/releases</url>
+		</repository>
+	</repositories>
+  <dependencies>
+    <!--  Leighton O'Brien dependencies -->
+    <dependency>
+      <groupId>com.leightonobrien.model</groupId>
+      <artifactId>models</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.leightonobrien.core</groupId>
+      <artifactId>core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+			<groupId>com.leightonobrien.drools</groupId>
+			<artifactId>drools</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+    <!--  TEST dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- WILDFLY Dependencies -->
+
+        <!-- First declare the APIs we depend on and need for compilation. All 
+            of them are provided by JBoss WildFly -->
+
+        <!-- Import the CDI API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Import the Common Annotations API (JSR-250), we use provided scope 
+            as the API is included in JBoss WildFly -->
+        <dependency>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Import the JAX-RS API, we use provided scope as the API is included 
+            in JBoss WildFly -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>jaxrs-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Import the JPA API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${version.hibernate}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${version.hibernate-validator}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${version.hibernate}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.deltaspike.core</groupId>
+			<artifactId>deltaspike-core-impl</artifactId>
+			<version>${version.deltaspike}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.core</groupId>
+			<artifactId>deltaspike-core-api</artifactId>
+			<version>${version.deltaspike}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.modules</groupId>
+			<artifactId>deltaspike-jsf-module-api</artifactId>
+			<version>${version.deltaspike}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.modules</groupId>
+			<artifactId>deltaspike-jsf-module-impl</artifactId>
+			<version>${version.deltaspike}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.deltaspike.modules</groupId>
+			<artifactId>deltaspike-security-module-api</artifactId>
+			<version>${version.deltaspike}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.deltaspike.modules</groupId>
+			<artifactId>deltaspike-security-module-impl</artifactId>
+			<version>${version.deltaspike}</version>
+			<scope>runtime</scope>
+		</dependency>
+        <!-- Import the EJB API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSR-303 (Bean Validation) Implementation -->
+        <!-- Provides portable constraints such as @Email -->
+        <!-- Hibernate Validator is shipped in JBoss WildFly -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Import the JSF API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+        <dependency>
+            <groupId>org.jboss.spec.javax.faces</groupId>
+            <artifactId>jboss-jsf-api_2.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Now we declare any tools needed -->
+
+        <!-- Annotation processor to generate the JPA 2.0 metamodel classes for 
+            typesafe criteria queries -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Annotation processor that raising compilation errors whenever constraint 
+            annotations are incorrectly used. -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator-annotation-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Needed for running tests (you may also use TestNG) -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Optional, but highly recommended -->
+        <!-- Arquillian allows you to test enterprise code such as EJBs and Transactional(JTA) 
+            JPA from JUnit/TestNG -->
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-servlet</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jandex</artifactId>
+			<version>${version.jandex}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>${version.primefaces}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${version.commons-fileupload}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>1.7.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.protocol</groupId>
+			<artifactId>arquillian-protocol-servlet</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-depchain</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.extension</groupId>
+			<artifactId>arquillian-persistence-api</artifactId>
+			<version>1.0.0.Alpha7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.dbunit</groupId> <!--needed by DBUnitUtils -->
+			<artifactId>dbunit</artifactId>
+			<version>2.5.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.extension</groupId>
+			<artifactId>arquillian-persistence-dbunit</artifactId>
+			<version>1.0.0.Alpha7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.cukespace</groupId>
+			<artifactId>cukespace-core</artifactId>
+			<version>1.6.0</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>1.2.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>1.2.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.graphene</groupId>
+			<artifactId>graphene-webdriver</artifactId>
+			<version>${version.graphene}</version>
+			<type>pom</type>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<!-- conflict with jacoco -->
+					<groupId>cglib</groupId>
+					<artifactId>cglib</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- conflict with gatling -->
+					<groupId>io.netty</groupId>
+					<artifactId>netty</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>2.3.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.ws.rs</groupId>
+			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
+			<version>1.0.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- performance -->
+		<dependency>
+			<groupId>io.gatling.highcharts</groupId>
+			<artifactId>gatling-charts-highcharts</artifactId>
+			<version>2.1.7</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- swagger api doc -->
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger-annotations-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-jaxrs_2.10</artifactId>
+			<version>${swagger-jaxrs-2_10-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>${version.resteasy}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>3.0.12.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-core</artifactId>
+			<version>${keycloak-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-adapter-core</artifactId>
+			<version>${keycloak-adapter-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jxls</groupId>
+			<artifactId>jxls</artifactId>
+			<version>${jxls.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jxls</groupId>
+			<artifactId>jxls-poi</artifactId>
+			<version>${jxls-poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jxls</groupId>
+			<artifactId>jxls-jexcel</artifactId>
+			<version>${jxls-excel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jxls</groupId>
+			<artifactId>jxls-reader</artifactId>
+			<version>${jxls-reader.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${apache-poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.14-beta1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.univocity</groupId>
+			<artifactId>univocity-parsers</artifactId>
+			<version>1.5.6</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.3.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>3.0.8.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javamoney</groupId>
+			<artifactId>moneta</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jadira.usertype</groupId>
+			<artifactId>usertype.core</artifactId>
+			<version>5.0.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.joda</groupId>
+			<artifactId>joda-money</artifactId>
+			<version>0.11</version>
+		</dependency>
+  </dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/docs</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<filtering>true</filtering>
+				<directory>src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/test/java/</directory>
+			</testResource>
+		</testResources>
+		<finalName>data-router2</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.zeroturnaround</groupId>
+				<artifactId>jrebel-maven-plugin</artifactId>
+				<version>1.1.5</version>
+				<executions>
+					<execution>
+						<id>generate-rebel-xml</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<debug>true</debug>
+					<debuglevel>lines,vars,source</debuglevel>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${version.surefire.plugin}</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+			<!-- The WildFly plugin deploys your war to a local WildFly container -->
+			<!-- To use, run: mvn package wildfly:deploy -->
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>${version.wildfly.maven.plugin}</version>
+				<configuration>
+					<hostname>localhost</hostname>
+					<port>9990</port>
+					<username>admin</username>
+					<password>ss_password</password>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.1.10</version>
+				<executions>
+					<execution>
+						<id>git-info</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+						<configuration>
+							<generateGitPropertiesFile>true</generateGitPropertiesFile>
+							<generateGitPropertiesFilename>target/classes/git.properties</generateGitPropertiesFilename>
+							<!-- If you'd like to tell the plugin where your .git directory is, 
+								use this setting, otherwise we'll perform a search trying to figure out the 
+								right directory. It's better to add it explicite IMHO. -->
+							<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+
+							<!-- that's the default value, you don't have to set it -->
+							<prefix>git</prefix>
+
+							<!-- that's the default value -->
+							<dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+
+							<!-- @since 2.2.0 -->
+							<!-- If you want to set the timezone of the dateformat to anything 
+								in particular you can do this by using this option. As a general warning 
+								try to avoid three-letter time zone IDs because the same abbreviation are 
+								often used for multiple time zones. The default value we'll use the timezone 
+								use the timezone that's shipped with java (java.util.TimeZone.getDefault().getID()). 
+								*Note*: If you plan to set the java's timezone by using `MAVEN_OPTS=-Duser.timezone=UTC 
+								mvn clean package`, `mvn clean package -Duser.timezone=UTC` or any other 
+								configuration keep in mind that this option will override those settings 
+								and will not take other configurations into account! -->
+							<dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+
+							<!-- false is default here, it prints some more information during 
+								the build -->
+							<verbose>false</verbose>
+
+							<!-- ALTERNATE SETUP - GENERATE FILE -->
+							<!-- If you want to keep git information, even in your WAR file etc, 
+								use this mode, which will generate a properties file (with filled out values) 
+								which you can then normally read using new Properties().load(/**/) -->
+
+							<!-- this is false by default, forces the plugin to generate the git.properties 
+								file -->
+							<generateGitPropertiesFile>true</generateGitPropertiesFile>
+
+							<!-- The path for the to be generated properties file, it's relative 
+								to ${project.basedir} -->
+							<generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+
+							<!-- Denotes the format to save properties in. Valid options are "properties" 
+								(default) and "json". Properties will be saved to the generateGitPropertiesFilename 
+								if generateGitPropertiesFile is set to `true`. -->
+							<format>properties</format>
+
+							<!-- this is true by default; You may want to set this to false, if 
+								the plugin should run inside a <packaging>pom</packaging> project. Most projects 
+								won't need to override this property. For an use-case for this kind of behaviour 
+								see: https://github.com/ktoso/maven-git-commit-id-plugin/issues/21 -->
+							<skipPoms>true</skipPoms>
+
+							<!-- @since 2.1.4 -->
+							<!-- Tell maven-git-commit-id to inject the git properties into all 
+								reactor projects not just the current one. For details about why you might 
+								want to skip this, read this issue: https://github.com/ktoso/maven-git-commit-id-plugin/pull/65 
+								The property is set to ``false`` by default to prevent the overriding of 
+								properties that may be unrelated to the project. -->
+							<injectAllReactorProjects>false</injectAllReactorProjects>
+
+							<!-- @since 2.0.4 -->
+							<!-- true by default, controls whether the plugin will fail when no 
+								.git directory is found, when set to false the plugin will just skip execution -->
+							<failOnNoGitDirectory>true</failOnNoGitDirectory>
+
+							<!-- @since 2.1.5 -->
+							<!-- true by default, controls whether the plugin will fail if it 
+								was unable to obtain enough data for a complete run, if you don't care about 
+								this, you may want to set this value to false. -->
+							<failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
+
+							<!-- @since 2.1.8 -->
+							<!-- skip the plugin execution completely. This is useful for e.g. 
+								profile activated plugin invocations or to use properties to enable / disable 
+								pom features. Default value is 'false'. -->
+							<skip>false</skip>
+
+							<!-- @since 2.1.12 -->
+							<!-- Use with caution! In a multi-module build, only run once. This 
+								means that the plugins effects will only execute once, for the parent project. 
+								This probably won't "do the right thing" if your project has more than one 
+								git repository. Important: If you're using `generateGitPropertiesFile`, setting 
+								`runOnlyOnce` will make the plugin only generate the file in the directory 
+								where you started your build (!). The `git.*` maven properties are available 
+								in all modules. Default value is `false`. -->
+							<runOnlyOnce>false</runOnlyOnce>
+
+							<!-- @since 2.1.9 -->
+							<!-- Can be used to exclude certain properties from being emited into 
+								the resulting file. May be useful when you want to hide {@code git.remote.origin.url} 
+								(maybe because it contains your repo password?), or the email of the committer 
+								etc. Each value may be globbing, that is, you can write {@code git.commit.user.*} 
+								to exclude both, the {@code name}, as well as {@code email} properties from 
+								being emitted into the resulting files. Please note that the strings here 
+								are Java regexes ({@code .*} is globbing, not plain {@code *}). -->
+							<excludeProperties>
+								<!-- <excludeProperty>git.user.*</excludeProperty> -->
+							</excludeProperties>
+
+							<!-- @since 2.1.14 -->
+							<!-- Can be used to include only certain properties into the resulting 
+								file. Will be overruled by the exclude properties. Each value may be globbing, 
+								that is, you can write {@code git.commit.user.*} to include both, the {@code 
+								name}, as well as {@code email} properties into the resulting files. Please 
+								note that the strings here are Java regexes ({@code .*} is globbing, not 
+								plain {@code *}). -->
+							<includeOnlyProperties>
+								<!-- <includeOnlyProperty>^git.commit.id.full$</includeOnlyProperty> -->
+							</includeOnlyProperties>
+
+							<!-- @since 2.1.10 -->
+							<!-- false is default here, if set to true it uses native `git` excutable 
+								for extracting all data. This usually has better performance than the default 
+								(jgit) implemenation, but requires you to have git available as executable 
+								for the build as well as *might break unexpectedly* when you upgrade your 
+								system-wide git installation. As rule of thumb - stay on `jgit` (keep this 
+								`false`) until you notice performance problems. -->
+							<useNativeGit>false</useNativeGit>
+
+							<!-- @since v2.0.4 -->
+							<!-- Controls the length of the abbreviated git commit it (git.commit.id.abbrev) 
+								Defaults to `7`. `0` carries the special meaning. Maximum value is `40`, 
+								because of max SHA-1 length. -->
+							<abbrevLength>7</abbrevLength>
+
+							<!-- @since 2.1.0 -->
+							<!-- read up about git-describe on the in man, or it's homepage - 
+								it's a really powerful versioning helper and the recommended way to use git-commit-id-plugin. 
+								The configuration bellow is optional, by default describe will run "just 
+								like git-describe on the command line", even though it's a JGit reimplementation. -->
+							<gitDescribe>
+
+								<!-- don't generate the describe property -->
+								<skip>false</skip>
+
+								<!-- if no tag was found "near" this commit, just print the commit's 
+									id instead, helpful when you always expect this field to be not-empty -->
+								<always>false</always>
+								<!-- how many chars should be displayed as the commit object id? 
+									7 is git's default, 0 has a special meaning (see end of this README.md), 
+									and 40 is the maximum value here -->
+								<abbrev>7</abbrev>
+
+								<!-- when the build is triggered while the repo is in "dirty state", 
+									append this suffix -->
+								<dirty>-dirty</dirty>
+
+								<!-- Only consider tags matching the given pattern. This can be used 
+									to avoid leaking private tags from the repository. -->
+								<match>*</match>
+
+								<!-- always print using the "tag-commits_from_tag-g_commit_id-maybe_dirty" 
+									format, even if "on" a tag. The distance will always be 0 if you're "on" 
+									the tag. -->
+								<forceLongFormat>false</forceLongFormat>
+							</gitDescribe>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- rest api:https://rpestano.wordpress.com/2014/12/21/some-words-on-javaee-rest-and-swagger/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
+				<executions>
+					<execution>
+						<id>generate-service-docs</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<doclet>com.carma.swagger.doclet.ServiceDoclet</doclet>
+							<docletArtifact>
+								<groupId>com.carma</groupId>
+								<artifactId>swagger-doclet</artifactId>
+								<version>1.0.4.1</version>
+							</docletArtifact>
+							<reportOutputDirectory>src/main/webapp</reportOutputDirectory>
+							<useStandardDocletOptions>false</useStandardDocletOptions>
+							<additionalparam>-apiVersion 1 -docBasePath /api/apidocs
+								-apiBasePath /api/rest
+								-swaggerUiPath
+								${project.build.directory}/
+							</additionalparam>
+						</configuration>
+						<goals>
+							<goal>javadoc</goal>
+						</goals>
+					</execution>
+
+				</executions>
+
+			</plugin>
+
+			<plugin>
+				<groupId>com.sebastian-daschner</groupId>
+				<artifactId>jaxrs-analyzer-maven-plugin</artifactId>
+				<version>0.8</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>analyze-jaxrs</goal>
+						</goals>
+						<configuration>
+							<!-- Available backends, defaults to plaintext -->
+							<!-- <backend>plaintext</backend> -->
+							<backend>swagger</backend>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-javadoc-plugin
+										</artifactId>
+										<versionRange>
+											[2.9.1,)
+										</versionRange>
+										<goals>
+											<goal>javadoc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.0.0</version>
+					<configuration>
+						<filesets>
+							<fileset>
+								<directory>src/main/webapp/apidocs</directory>
+								<includes>
+									<include>classes/*.*</include>
+									<include>api/*.*</include>
+									<include>data-router2.war</include>
+								</includes>
+								<followSymlinks>false</followSymlinks>
+							</fileset>
+						</filesets>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<profiles>
+		<!-- profiles for selecting which tests will run (i.e surefire includes) -->
+		<profile>
+			<id>WILDFLY_MANAGED_8.X</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.wildfly</groupId>
+					<artifactId>wildfly-arquillian-container-managed</artifactId>
+					<version>8.2.1.Final</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.16</version>
+						<configuration>
+							<skipTests>false</skipTests>
+							<runOrder>reversealphabetical</runOrder>
+							<includes>
+								<include>**/*It.java</include>
+								<include>**/*Bdd.java</include>
+								<include>**/*At.java</include>
+								<include>**/*Rest.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>tests2</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.16</version>
+						<configuration>
+							<skipTests>false</skipTests>
+							<runOrder>reversealphabetical</runOrder>
+							<includes>
+								<include>**/CrudIt.java</include>
+
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>whitebox</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.16</version>
+						<configuration>
+							<skipTests>false</skipTests>
+							<includes>
+								<include>**/*It.java</include>
+								<include>**/*Bdd.java</include>
+								<include>**/*Rest.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>blackbox</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.16</version>
+						<configuration>
+							<skipTests>false</skipTests>
+							<runOrder>reversealphabetical</runOrder>
+							<includes>
+								<include>**/*At.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- container profiles -->
+		<profile>
+			<id>wildfly-managed</id>
+			<properties>
+				<arquillian.container>wildfly-managed</arquillian.container>
+				<arquillian.serverHome>${project.build.directory}/wildfly-${version.wildfly}</arquillian.serverHome>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>unpack</id>
+								<phase>process-test-classes</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>org.wildfly</groupId>
+											<artifactId>wildfly-dist</artifactId>
+											<version>${version.wildfly}</version>
+											<type>zip</type>
+											<overWrite>false</overWrite>
+											<outputDirectory>${project.build.directory}</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<dependencies>
+				<dependency>
+					<groupId>org.wildfly</groupId>
+					<artifactId>wildfly-arquillian-container-managed</artifactId>
+					<version>${version.wildfly}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>wildfly-remote</id>
+			<properties>
+				<arquillian.container>wildfly-remote</arquillian.container>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.wildfly</groupId>
+					<artifactId>wildfly-arquillian-container-remote</artifactId>
+					<version>8.2.0.Final</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>perf</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.gatling</groupId>
+						<artifactId>gatling-maven-plugin</artifactId>
+						<version>2.1.7</version>
+						<configuration>
+							<dataFolder>src/test/resources/data</dataFolder>
+							<bodiesFolder>src/test/resources/request-bodies</bodiesFolder>
+							<!--<simulationsFolder>src/test/scala/com/cdi/crud/perf</simulationsFolder> -->
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
+		<profile>
+			<id>docs</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.asciidoctor</groupId>
+						<artifactId>asciidoctor-maven-plugin</artifactId>
+						<version>1.5.2</version>
+						<configuration>
+							<sourceDirectory>src/main/docs/gatling</sourceDirectory>
+							<sourceDocumentName>gatling.adoc</sourceDocumentName>
+							<outputDirectory>src/main/webapp/docs</outputDirectory>
+							<headerFooter>true</headerFooter>
+							<doctype>book</doctype>
+							<attributes>
+								<imagesdir>./images</imagesdir>
+								<docVersion>${project.version}</docVersion>
+							</attributes>
+						</configuration>
+						<executions>
+							<execution>
+								<id>output-html5</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>process-asciidoc</goal>
+								</goals>
+								<configuration>
+									<sourceHighlighter>coderay</sourceHighlighter>
+									<backend>html5</backend>
+									<attributes>
+										<linkcss>true</linkcss>
+										<linkattrs>true</linkattrs>
+										<sectnums />
+										<toc>right</toc>
+										<tocLevels>3</tocLevels>
+										<icons>font</icons>
+										<idprefix />
+										<sectanchors>true</sectanchors>
+									</attributes>
+								</configuration>
+							</execution>
+							<execution>
+								<id>output-pdf</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>process-asciidoc</goal>
+								</goals>
+								<configuration>
+									<backend>pdf</backend>
+									<sourceHighlighter>coderay</sourceHighlighter>
+									<attributes>
+										<pagenums />
+										<toc />
+										<idprefix />
+										<idseparator>-</idseparator>
+									</attributes>
+								</configuration>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.asciidoctor</groupId>
+								<artifactId>asciidoctorj-pdf</artifactId>
+								<version>1.5.0-alpha.6</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>jacoco</id>
+			<properties>
+				<jacoco.version>0.7.4.201502262128</jacoco.version>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<excludes>
+								<exclude>com/cdi/crud/bean/*.class</exclude>
+								<exclude>com/cdi/crud/model/*.class</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<dependencies>
+				<dependency>
+					<groupId>org.jboss.arquillian.extension</groupId>
+					<artifactId>arquillian-jacoco</artifactId>
+					<version>1.0.0.Alpha8</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.jacoco</groupId>
+					<artifactId>org.jacoco.core</artifactId>
+					<version>${jacoco.version}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>coveralls</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eluder.coveralls</groupId>
+						<artifactId>coveralls-maven-plugin</artifactId>
+						<version>2.0.1</version>
+						<executions>
+							<execution>
+								<id>coveralls-jacoco</id>
+								<phase>install</phase>
+								<goals>
+									<goal>jacoco</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<repoToken>BeY5SbPOlCAGfuhiJos2BbQxkEpFLQrvU</repoToken>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>swarm</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.wildfly.swarm</groupId>
+						<artifactId>wildfly-swarm-plugin</artifactId>
+						<version>${version.wildfly-swarm}</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>package</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<!-- The WildFly plugin deploys your war to a local WildFly container -->
+					<!-- To use, run: mvn package wildfly:deploy -->
+					<plugin>
+						<groupId>org.wildfly.plugins</groupId>
+						<artifactId>wildfly-maven-plugin</artifactId>
+						<version>${version.wildfly.maven.plugin}</version>
+						<configuration>
+							<hostname>localhost</hostname>
+							<port>9990</port>
+							<username>admin</username>
+							<password>ss_password</password>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>docker</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<!-- The WildFly plugin deploys your war to a local WildFly container -->
+					<!-- To use, run: mvn package wildfly:deploy -->
+					<plugin>
+						<groupId>org.wildfly.plugins</groupId>
+						<artifactId>wildfly-maven-plugin</artifactId>
+						<version>${version.wildfly.maven.plugin}</version>
+						<configuration>
+							<hostname>docker</hostname>
+							<port>59990</port>
+							<username>admin</username>
+							<password>ss_password</password>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>WILDFLY_REMOTE_8.X</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.wildfly</groupId>
+					<artifactId>wildfly-arquillian-container-remote</artifactId>
+					<version>8.2.1.Final</version>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+</project>
